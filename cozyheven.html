@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CozyHeven — Find Your Perfect Stay</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#B5862A;--gold-l:#D4A93C;--gold-ll:#F0CC70;--gold-bg:#FBF6EA;
+  --ink:#1C1409;--ink2:#2E200F;--slate:#6B5030;--muted:#9A8060;
+  --cream:#FAF7F0;--warm:#F2EAD8;--white:#FFFFFF;
+  --green:#1E6B40;--green-bg:#EAF5EF;
+  --red:#B03020;--red-bg:#FAEAE8;
+  --blue:#1A4E80;--blue-bg:#E8EFF8;
+  --amber:#A85510;--amber-bg:#FEF0E0;
+  --border:rgba(181,134,42,.16);
+  --border2:rgba(181,134,42,.28);
+  --shadow:0 4px 32px rgba(28,20,9,.12);
+  --shadow-sm:0 2px 12px rgba(28,20,9,.08);
+  --r:14px;--r-sm:10px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden}
+
+/* ======= PAGE SYSTEM ======= */
+.page{display:none;min-height:100vh;animation:fadeUp .4s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ======= NAVBAR ======= */
+.navbar{position:sticky;top:0;z-index:200;background:rgba(250,247,240,.96);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav-inner{max-width:1140px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);cursor:pointer;letter-spacing:-.02em;text-decoration:none}
+.logo span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-link{padding:8px 14px;font-size:13px;font-weight:500;color:var(--slate);cursor:pointer;border-radius:8px;transition:all .15s;text-decoration:none;border:none;background:none;font-family:'Jost',sans-serif}
+.nav-link:hover{color:var(--ink);background:var(--warm)}
+.nav-link.active{color:var(--gold)}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.btn-nav-login{padding:8px 18px;font-size:13px;font-weight:600;color:var(--gold);border:1.5px solid var(--border2);border-radius:8px;cursor:pointer;background:none;font-family:'Jost',sans-serif;transition:all .15s}
+.btn-nav-login:hover{background:var(--gold-bg);border-color:var(--gold)}
+.btn-nav-cta{padding:9px 20px;font-size:13px;font-weight:600;color:var(--white);background:var(--gold);border:none;border-radius:8px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .15s}
+.btn-nav-cta:hover{background:var(--gold-l)}
+.user-pill{display:flex;align-items:center;gap:8px;padding:5px 14px 5px 6px;border:1px solid var(--border2);border-radius:30px;cursor:pointer;background:var(--warm);transition:all .15s}
+.user-pill:hover{border-color:var(--gold)}
+.user-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--white)}
+.user-name{font-size:13px;font-weight:600;color:var(--ink)}
+
+/* ======= SHARED COMPONENTS ======= */
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+.section-tag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.section-h{font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:var(--ink);line-height:1.2;margin-bottom:10px}
+.section-sub{font-size:15px;color:var(--muted);line-height:1.7;max-width:560px}
+.btn-p{display:inline-block;padding:13px 28px;background:var(--gold);color:var(--white);border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Jost',sans-serif;transition:all .15s;text-align:center}
+.btn-p:hover{background:var(--gold-l);transform:translateY(-1px)}
+.btn-s{display:inline-block;padding:12px 24px;background:var(--warm);color:var(--gold);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Jost',sans-serif;transition:all .15s;text-align:center}
+.btn-s:hover{background:var(--gold-bg);border-color:var(--gold)}
+.input{width:100%;padding:11px 14px;background:var(--warm);border:1.5px solid var(--border);border-radius:9px;font-size:14px;color:var(--ink);font-family:'Jost',sans-serif;outline:none;transition:border-color .15s}
+.input:focus{border-color:var(--gold);background:var(--white)}
+.input::placeholder{color:var(--muted)}
+label.lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-sm)}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-gold{background:var(--gold-bg);color:var(--gold)}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-blue{background:var(--blue-bg);color:var(--blue)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+.stars{color:var(--gold-l);letter-spacing:1px}
+.chip{display:inline-block;padding:4px 10px;background:var(--warm);border-radius:20px;font-size:11px;font-weight:500;color:var(--slate);margin:2px}
+.chip-active{display:inline-block;padding:4px 12px;background:var(--gold);border-radius:20px;font-size:11px;font-weight:700;color:var(--white);margin:2px}
+.img-ph{background:linear-gradient(135deg,#DDD0B0 0%,#C4B090 50%,#D8C8A0 100%);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px}
+.img-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(28,20,9,.45))}
+.trow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(181,134,42,.08)}
+.trow:last-child{border-bottom:none}
+.tkey{font-size:12px;color:var(--muted);font-weight:500}
+.tval{font-size:13px;font-weight:600;color:var(--ink)}
+.price-big{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--gold)}
+.price-med{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold)}
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--white);flex-shrink:0}
+.modal-overlay{position:fixed;inset:0;background:rgba(28,20,9,.55);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--white);border-radius:var(--r);padding:40px;width:100%;max-width:440px;box-shadow:0 24px 80px rgba(28,20,9,.2);position:relative;animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:var(--warm);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--slate);font-family:'Jost',sans-serif}
+.modal-close:hover{background:var(--border);color:var(--ink)}
+
+/* toast */
+.toast{position:fixed;bottom:28px;right:28px;z-index:1000;background:var(--ink);color:var(--white);padding:12px 22px;border-radius:10px;font-size:13px;font-weight:500;display:none;animation:slideIn .3s ease}
+.toast.show{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ======= LANDING PAGE ======= */
+#page-home .hero{min-height:88vh;background:linear-gradient(160deg,var(--ink) 0%,var(--ink2) 45%,#4A300A 100%);position:relative;display:flex;align-items:center;overflow:hidden}
+#page-home .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B5862A' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative;z-index:2;padding:100px 24px 80px;max-width:1140px;margin:0 auto;width:100%}
+.hero-tag{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-ll);margin-bottom:18px}
+.hero-h{font-family:'Playfair Display',serif;font-size:clamp(42px,6vw,72px);font-weight:700;color:var(--white);line-height:1.08;margin-bottom:22px;max-width:700px}
+.hero-h em{color:var(--gold-ll);font-style:italic}
+.hero-sub{font-size:17px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:40px;max-width:480px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:60px}
+.hero-btn-p{padding:15px 32px;background:var(--gold);color:var(--white);border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Jost',sans-serif;transition:all .15s}
+.hero-btn-p:hover{background:var(--gold-l);transform:translateY(-2px)}
+.hero-btn-s{padding:14px 28px;background:rgba(255,255,255,.1);color:var(--white);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'Jost',sans-serif;transition:all .15s;backdrop-filter:blur(8px)}
+.hero-btn-s:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}
+.hero-stats{display:flex;gap:40px;flex-wrap:wrap}
+.hstat{border-left:2px solid var(--gold);padding-left:16px}
+.hstat-n{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--white)}
+.hstat-l{font-size:12px;color:rgba(255,255,255,.5);font-weight:500;margin-top:2px}
+
+/* SEARCH BOX */
+.search-box{background:var(--white);border-radius:var(--r);padding:24px 28px;box-shadow:var(--shadow);margin:-56px 24px 0;max-width:1140px;margin-left:auto;margin-right:auto;position:relative;z-index:10;display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:16px;align-items:end}
+.search-field{display:flex;flex-direction:column;gap:6px}
+.search-field .input{font-size:14px}
+.search-btn{padding:12px 28px;background:var(--gold);color:var(--white);border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Jost',sans-serif;transition:all .15s;white-space:nowrap}
+.search-btn:hover{background:var(--gold-l)}
+
+/* FEATURES */
+.features{padding:100px 24px 60px;max-width:1140px;margin:0 auto}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.feat-card{padding:32px;border-radius:var(--r);border:1px solid var(--border);background:var(--white);transition:all .2s}
+.feat-card:hover{box-shadow:var(--shadow);transform:translateY(-4px);border-color:var(--border2)}
+.feat-icon{width:48px;height:48px;border-radius:12px;background:var(--gold-bg);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px}
+.feat-h{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.feat-p{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* FEATURED HOTELS */
+.hotels-section{padding:60px 24px 80px;max-width:1140px;margin:0 auto}
+.hotels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.hotel-card{border-radius:var(--r);overflow:hidden;background:var(--white);border:1px solid var(--border);box-shadow:var(--shadow-sm);cursor:pointer;transition:all .2s}
+.hotel-card:hover{box-shadow:var(--shadow);transform:translateY(-4px)}
+.hotel-img{height:200px;position:relative}
+.hotel-img .img-ph{height:100%;width:100%}
+.hotel-img-badge{position:absolute;top:14px;left:14px;z-index:2;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;backdrop-filter:blur(6px)}
+.hotel-img-fav{position:absolute;top:12px;right:12px;z-index:2;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s}
+.hotel-img-fav:hover{background:var(--white);transform:scale(1.1)}
+.hotel-body{padding:18px 20px}
+.hotel-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.hotel-loc{font-size:12px;color:var(--muted);margin-bottom:8px}
+.hotel-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.hotel-rating{display:flex;align-items:center;gap:5px}
+.hotel-chips{margin-bottom:12px}
+.hotel-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border)}
+.hotel-price-label{font-size:10px;color:var(--muted);font-weight:500}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--ink);padding:80px 24px}
+.testi-inner{max-width:1140px;margin:0 auto}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.testi-card{background:rgba(255,255,255,.05);border:1px solid rgba(181,134,42,.2);border-radius:var(--r);padding:28px}
+.testi-stars{margin-bottom:14px;font-size:14px;color:var(--gold-ll)}
+.testi-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.8;margin-bottom:20px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--white)}
+.testi-name{font-size:13px;font-weight:600;color:var(--white)}
+.testi-loc{font-size:11px;color:rgba(255,255,255,.4)}
+
+/* CTA BANNER */
+.cta-banner{padding:80px 24px;max-width:1140px;margin:0 auto;text-align:center}
+.cta-inner{background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 50%,#5A380A 100%);border-radius:20px;padding:60px 40px;position:relative;overflow:hidden}
+.cta-inner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23B5862A' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.cta-inner h2{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;color:var(--white);margin-bottom:14px;position:relative}
+.cta-inner p{font-size:16px;color:rgba(255,255,255,.65);margin-bottom:32px;position:relative}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+
+/* FOOTER */
+footer{background:var(--ink2);border-top:1px solid rgba(181,134,42,.2);padding:40px 24px 24px}
+.footer-inner{max-width:1140px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.footer-logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--white)}
+.footer-logo span{color:var(--gold-ll)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-link{font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;transition:color .15s}
+.footer-link:hover{color:rgba(255,255,255,.8)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.3);margin-top:24px;text-align:center}
+
+/* ======= SEARCH PAGE ======= */
+#page-search .search-header{background:var(--ink);padding:36px 24px 32px}
+#page-search .search-header-inner{max-width:1140px;margin:0 auto}
+#page-search .search-h{font-family:'Playfair Display',serif;font-size:26px;color:var(--white);margin-bottom:20px}
+.search-bar-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:12px;align-items:end}
+.search-bar-row .input{background:rgba(255,255,255,.1);border-color:rgba(181,134,42,.3);color:var(--white);font-size:13px}
+.search-bar-row .input:focus{background:rgba(255,255,255,.15);border-color:var(--gold)}
+.search-bar-row .input::placeholder{color:rgba(255,255,255,.4)}
+.search-bar-row .lbl{color:rgba(255,255,255,.5)}
+.search-body{max-width:1140px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:260px 1fr;gap:32px}
+.filters-panel{position:sticky;top:80px}
+.filter-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:22px}
+.filter-h{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.filter-group{margin-bottom:20px}
+.filter-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.filter-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:13px;color:var(--ink)}
+.range-track{height:4px;background:var(--warm);border-radius:2px;position:relative;margin:12px 0}
+.range-fill{height:4px;background:var(--gold);border-radius:2px;width:65%}
+.range-thumb{width:16px;height:16px;background:var(--white);border:2px solid var(--gold);border-radius:50%;position:absolute;top:-6px;right:35%;cursor:pointer;box-shadow:var(--shadow-sm)}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.results-count{font-size:14px;color:var(--muted)}
+.results-count strong{color:var(--ink);font-weight:600}
+.sort-select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--ink);background:var(--white);cursor:pointer;font-family:'Jost',sans-serif}
+.results-list{display:flex;flex-direction:column;gap:20px}
+.result-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:grid;grid-template-columns:280px 1fr auto;cursor:pointer;transition:all .18s;box-shadow:var(--shadow-sm)}
+.result-card:hover{box-shadow:var(--shadow);border-color:var(--border2)}
+.result-img{height:200px;position:relative}
+.result-img .img-ph{height:100%;width:100%}
+.result-body{padding:20px 22px}
+.result-name{font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.result-loc{font-size:12px;color:var(--muted);margin-bottom:10px}
+.result-amenities{margin:10px 0 14px}
+.result-desc{font-size:13px;color:var(--slate);line-height:1.6;margin-bottom:10px}
+.result-right{padding:20px 22px 20px 0;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;min-width:160px}
+
+/* ======= HOTEL DETAIL PAGE ======= */
+.detail-hero{height:480px;position:relative;background:var(--ink)}
+.detail-hero .img-ph{height:100%;width:100%;opacity:.85}
+.detail-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(28,20,9,.2) 0%,rgba(28,20,9,.7) 100%)}
+.detail-hero-content{position:absolute;bottom:40px;left:0;right:0;padding:0 40px;max-width:1140px;margin:0 auto}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;color:var(--white);font-size:13px;font-weight:500;cursor:pointer;margin-bottom:16px;backdrop-filter:blur(8px);transition:all .15s;font-family:'Jost',sans-serif}
+.back-btn:hover{background:rgba(255,255,255,.2)}
+.detail-hotel-name{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;color:var(--white);margin-bottom:8px}
+.detail-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.detail-body{max-width:1140px;margin:0 auto;padding:40px 40px 80px;display:grid;grid-template-columns:1fr 340px;gap:40px}
+.detail-main{}
+.detail-sidebar{position:sticky;top:80px;align-self:start}
+.booking-widget{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:28px;box-shadow:var(--shadow)}
+.bw-price{margin-bottom:20px}
+.bw-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.bw-field{border:1.5px solid var(--border);border-radius:9px;padding:10px 14px}
+.bw-field-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
+.bw-field-val{font-size:13px;font-weight:600;color:var(--ink)}
+
+/* ======= ROOMS PAGE ======= */
+.rooms-body{max-width:1140px;margin:0 auto;padding:32px 40px 80px}
+.room-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:grid;grid-template-columns:260px 1fr auto;margin-bottom:20px;transition:all .18s;box-shadow:var(--shadow-sm)}
+.room-card:hover{box-shadow:var(--shadow)}
+.room-card.selected{border-color:var(--gold);border-width:2px}
+.room-img{height:180px}
+.room-body{padding:20px 24px}
+.room-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.room-specs{font-size:12px;color:var(--muted);margin-bottom:10px}
+.room-right{padding:20px 22px 20px 0;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;min-width:150px}
+
+/* ======= CHECKOUT PAGE ======= */
+.checkout-body{max-width:920px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:1fr 340px;gap:32px}
+.step-bar{display:flex;gap:0;margin-bottom:32px;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;grid-column:1/-1}
+.step-item{flex:1;padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:var(--muted);border-right:1px solid var(--border)}
+.step-item:last-child{border-right:none}
+.step-item.active{background:var(--gold-bg);color:var(--gold)}
+.step-item.done{color:var(--green)}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--warm);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.step-item.active .step-num{background:var(--gold);border-color:var(--gold);color:var(--white)}
+.step-item.done .step-num{background:var(--green);border-color:var(--green);color:var(--white)}
+.form-section{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:28px;margin-bottom:20px}
+.form-section-h{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.order-summary{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:24px;position:sticky;top:80px}
+.offer-badge{background:var(--green-bg);border:1px solid rgba(30,107,64,.2);border-radius:9px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.pay-opt{border:1.5px solid var(--border);border-radius:9px;padding:12px 16px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
+.pay-opt.selected{border-color:var(--gold);background:var(--gold-bg);color:var(--gold)}
+
+/* ======= CONFIRMATION PAGE ======= */
+.confirm-body{max-width:680px;margin:0 auto;padding:60px 24px 100px;text-align:center}
+.confirm-icon{width:80px;height:80px;border-radius:50%;background:var(--green-bg);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 28px}
+.booking-ref{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold);letter-spacing:.1em;margin:16px 0 24px}
+
+/* ======= MY BOOKINGS PAGE ======= */
+.bookings-body{max-width:1140px;margin:0 auto;padding:40px 24px 80px}
+.booking-list-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:22px 26px;display:grid;grid-template-columns:auto 1fr auto auto;gap:20px;align-items:center;margin-bottom:16px;cursor:pointer;transition:all .18s;box-shadow:var(--shadow-sm)}
+.booking-list-card:hover{box-shadow:var(--shadow);border-color:var(--border2)}
+
+/* ======= PROFILE PAGE ======= */
+.profile-body{max-width:920px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:280px 1fr;gap:32px}
+.profile-sidebar-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:28px;text-align:center;height:fit-content}
+.profile-av-big{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:var(--white);margin:0 auto 14px}
+
+/* ======= LOGIN/REGISTER MODAL ======= */
+.auth-tabs{display:flex;margin-bottom:28px;border-bottom:1px solid var(--border)}
+.auth-tab{flex:1;padding:12px;text-align:center;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.auth-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ======= PAGE HEADER ======= */
+.page-header-bar{background:var(--white);border-bottom:1px solid var(--border);padding:28px 24px 24px}
+.page-header-inner{max-width:1140px;margin:0 auto}
+.page-h{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.page-sub{font-size:14px;color:var(--muted)}
+
+/* ======= RESPONSIVE ======= */
+@media(max-width:900px){
+  .search-box,.search-bar-row{grid-template-columns:1fr 1fr;gap:12px}
+  .search-btn{grid-column:1/-1}
+  .features-grid,.hotels-grid,.testi-grid{grid-template-columns:1fr 1fr}
+  .search-body{grid-template-columns:1fr}
+  .filters-panel{position:static}
+  .result-card{grid-template-columns:220px 1fr}
+  .result-right{display:none}
+  .detail-body{grid-template-columns:1fr;padding:24px}
+  .checkout-body{grid-template-columns:1fr}
+  .profile-body{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .features-grid,.hotels-grid,.testi-grid{grid-template-columns:1fr}
+  .hero-h{font-size:36px}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ======= NAVBAR ======= -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="logo" onclick="goPage('home')" href="#">Cozy<span>Heven</span></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goPage('home')">Home</button>
+      <button class="nav-link" onclick="goPage('search')">Explore</button>
+      <button class="nav-link" id="nav-bookings-btn" onclick="requireAuth('bookings')" style="display:none">My Bookings</button>
+      <button class="nav-link" id="nav-profile-btn" onclick="requireAuth('profile')" style="display:none">Profile</button>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <button class="btn-nav-login" onclick="openAuth('login')">Sign in</button>
+      <button class="btn-nav-cta" onclick="openAuth('register')">Get started</button>
+    </div>
+    <div id="nav-user" style="display:none">
+      <div class="user-pill" onclick="toggleUserMenu()">
+        <div class="user-av" id="nav-av">PS</div>
+        <span class="user-name" id="nav-username">Priya S.</span>
+        <span style="color:var(--muted);font-size:11px;margin-left:2px">▾</span>
+      </div>
+      <div id="user-menu" style="display:none;position:absolute;top:68px;right:24px;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);z-index:300;min-width:180px;overflow:hidden">
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
+          <div style="font-size:13px;font-weight:600;color:var(--ink)" id="menu-fullname">Priya Sharma</div>
+          <div style="font-size:11px;color:var(--muted)" id="menu-email">priya@email.com</div>
+        </div>
+        <button onclick="goPage('bookings');closeMenu()" style="display:block;width:100%;padding:11px 18px;text-align:left;font-size:13px;font-weight:500;color:var(--ink);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif">📋 My Bookings</button>
+        <button onclick="goPage('profile');closeMenu()" style="display:block;width:100%;padding:11px 18px;text-align:left;font-size:13px;font-weight:500;color:var(--ink);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif">👤 My Profile</button>
+        <div style="height:1px;background:var(--border)"></div>
+        <button onclick="logout()" style="display:block;width:100%;padding:11px 18px;text-align:left;font-size:13px;font-weight:500;color:var(--red);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif">⬤ Sign out</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ======= PAGES ======= -->
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-tag">Discover · Book · Unwind</div>
+      <h1 class="hero-h">Find your perfect <em>cozy haven</em> anywhere in the world</h1>
+      <p class="hero-sub">Curated luxury stays, boutique guesthouses, and hidden gems — handpicked for travellers who love comfort.</p>
+      <div class="hero-btns">
+        <button class="hero-btn-p" onclick="goPage('search')">Explore Stays</button>
+        <button class="hero-btn-s" onclick="openAuth('register')">Join CozyHeven</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-n">2,400+</div><div class="hstat-l">Curated properties</div></div>
+        <div class="hstat"><div class="hstat-n">48</div><div class="hstat-l">Countries</div></div>
+        <div class="hstat"><div class="hstat-n">98%</div><div class="hstat-l">Happy guests</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH BOX -->
+  <div style="padding:0 24px;max-width:1188px;margin:0 auto">
+    <div class="search-box" style="margin:-56px 0 0">
+      <div class="search-field"><label class="lbl">Destination</label><input class="input" placeholder="City, hotel or area" id="home-dest"/></div>
+      <div class="search-field"><label class="lbl">Check-in</label><input class="input" type="date" id="home-checkin"/></div>
+      <div class="search-field"><label class="lbl">Check-out</label><input class="input" type="date" id="home-checkout"/></div>
+      <div class="search-field"><label class="lbl">Guests</label><input class="input" placeholder="2 Adults" id="home-guests"/></div>
+      <button class="search-btn" onclick="goPage('search')">Search →</button>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="section-tag">Why CozyHeven</div>
+    <h2 class="section-h">Travel the way you deserve</h2>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🏨</div>
+        <div class="feat-h">Curated Stays</div>
+        <p class="feat-p">Every property is personally vetted by our team. No shortcuts, no compromises — only places we'd stay ourselves.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔒</div>
+        <div class="feat-h">Secure Booking</div>
+        <p class="feat-p">Your payments are encrypted and protected. Instant confirmation, transparent pricing, zero hidden fees.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌟</div>
+        <div class="feat-h">Verified Reviews</div>
+        <p class="feat-p">Only guests who've actually stayed can leave reviews. Real opinions from real travellers — always.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💬</div>
+        <div class="feat-h">24/7 Support</div>
+        <p class="feat-p">Our concierge team is always on hand — before, during, and after your stay. We're here when you need us.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎯</div>
+        <div class="feat-h">Best Price Match</div>
+        <p class="feat-p">Find a lower price anywhere else? We'll match it — and give you an extra 10% off your next booking.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌿</div>
+        <div class="feat-h">Eco Certified</div>
+        <p class="feat-p">Filter by sustainability rating. Find properties that align with your values and tread lightly on the planet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED HOTELS -->
+  <div class="hotels-section">
+    <div class="section-tag">Featured Properties</div>
+    <h2 class="section-h">Handpicked for you</h2>
+    <div class="hotels-grid">
+      <div class="hotel-card" onclick="goPage('detail')">
+        <div class="hotel-img">
+          <div class="img-ph" style="height:200px;width:100%"><span style="position:relative;z-index:1">Mumbai, India</span></div>
+          <div class="hotel-img-badge" style="background:rgba(181,134,42,.9);color:#fff">5★ Luxury</div>
+          <button class="hotel-img-fav">♡</button>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">The Grand Oberoi</div>
+          <div class="hotel-loc">📍 Nariman Point, Mumbai</div>
+          <div class="hotel-meta">
+            <div class="hotel-rating"><span class="stars">★★★★★</span><span style="font-size:12px;font-weight:600;color:var(--ink);margin-left:4px">4.9</span><span style="font-size:11px;color:var(--muted);margin-left:3px">(312)</span></div>
+            <span class="badge badge-gold">Sea View</span>
+          </div>
+          <div class="hotel-chips"><span class="chip">Pool</span><span class="chip">Spa</span><span class="chip">Restaurant</span></div>
+          <div class="hotel-footer">
+            <div><div class="hotel-price-label">From</div><div class="price-med">₹8,400<span style="font-size:11px;font-weight:400;color:var(--muted)">/night</span></div></div>
+            <button class="btn-p" style="padding:9px 18px;font-size:12px" onclick="event.stopPropagation();goPage('detail')">Book Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="hotel-card" onclick="goPage('detail')">
+        <div class="hotel-img">
+          <div class="img-ph" style="height:200px;width:100%"><span style="position:relative;z-index:1">Bandra, Mumbai</span></div>
+          <div class="hotel-img-badge" style="background:rgba(30,107,64,.85);color:#fff">Eco Certified</div>
+          <button class="hotel-img-fav">♡</button>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">Taj Lands End</div>
+          <div class="hotel-loc">📍 Bandra West, Mumbai</div>
+          <div class="hotel-meta">
+            <div class="hotel-rating"><span class="stars">★★★★★</span><span style="font-size:12px;font-weight:600;color:var(--ink);margin-left:4px">4.8</span><span style="font-size:11px;color:var(--muted);margin-left:3px">(527)</span></div>
+            <span class="badge badge-green">Beach</span>
+          </div>
+          <div class="hotel-chips"><span class="chip">Beach</span><span class="chip">Pool</span><span class="chip">Gym</span></div>
+          <div class="hotel-footer">
+            <div><div class="hotel-price-label">From</div><div class="price-med">₹11,200<span style="font-size:11px;font-weight:400;color:var(--muted)">/night</span></div></div>
+            <button class="btn-p" style="padding:9px 18px;font-size:12px" onclick="event.stopPropagation();goPage('detail')">Book Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="hotel-card" onclick="goPage('detail')">
+        <div class="hotel-img">
+          <div class="img-ph" style="height:200px;width:100%"><span style="position:relative;z-index:1">Andheri, Mumbai</span></div>
+          <div class="hotel-img-badge" style="background:rgba(26,78,128,.85);color:#fff">Business</div>
+          <button class="hotel-img-fav">♡</button>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">ITC Maratha</div>
+          <div class="hotel-loc">📍 Andheri East, Mumbai</div>
+          <div class="hotel-meta">
+            <div class="hotel-rating"><span class="stars">★★★★</span><span style="font-size:12px;font-weight:600;color:var(--ink);margin-left:4px">4.6</span><span style="font-size:11px;color:var(--muted);margin-left:3px">(198)</span></div>
+            <span class="badge badge-blue">Airport</span>
+          </div>
+          <div class="hotel-chips"><span class="chip">Spa</span><span class="chip">Airport</span><span class="chip">AC</span></div>
+          <div class="hotel-footer">
+            <div><div class="hotel-price-label">From</div><div class="price-med">₹6,900<span style="font-size:11px;font-weight:400;color:var(--muted)">/night</span></div></div>
+            <button class="btn-p" style="padding:9px 18px;font-size:12px" onclick="event.stopPropagation();goPage('detail')">Book Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px"><button class="btn-s" onclick="goPage('search')">View all properties →</button></div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="testimonials">
+    <div class="testi-inner">
+      <div style="text-align:center;margin-bottom:8px"><div class="section-tag" style="color:var(--gold-ll)">Guest Stories</div></div>
+      <h2 class="section-h" style="color:var(--white);text-align:center;margin:0 auto 0;max-width:500px">What our guests say</h2>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-text">"CozyHeven made our anniversary trip absolutely magical. The hotel they recommended had the most breathtaking sea view — we never wanted to leave."</div>
+          <div class="testi-author">
+            <div class="testi-av">RS</div>
+            <div><div class="testi-name">Riya Shah</div><div class="testi-loc">Mumbai, India</div></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-text">"I travel for business every month and CozyHeven is the only booking platform I use. The filtering is precise, confirmation is instant, and support is genuinely excellent."</div>
+          <div class="testi-author">
+            <div class="testi-av" style="background:linear-gradient(135deg,#1A4E80,#378ADD)">AK</div>
+            <div><div class="testi-name">Arjun Kapoor</div><div class="testi-loc">Bangalore, India</div></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-text">"Found a hidden boutique hotel through CozyHeven that we never would have discovered otherwise. It was the highlight of our Goa trip — and the price was unbeatable."</div>
+          <div class="testi-author">
+            <div class="testi-av" style="background:linear-gradient(135deg,#1E6B40,#2ECC8A)">NP</div>
+            <div><div class="testi-name">Neha Patel</div><div class="testi-loc">Delhi, India</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-banner">
+    <div class="cta-inner">
+      <h2>Ready to find your CozyHeven?</h2>
+      <p>Join 50,000+ travellers who've discovered their perfect stay</p>
+      <div class="cta-btns">
+        <button class="hero-btn-p" onclick="openAuth('register')">Create free account</button>
+        <button class="hero-btn-s" onclick="goPage('search')">Browse stays</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Cozy<span>Heven</span></div>
+      <div class="footer-links">
+        <span class="footer-link">About</span>
+        <span class="footer-link">Careers</span>
+        <span class="footer-link">Privacy</span>
+        <span class="footer-link">Terms</span>
+        <span class="footer-link">Support</span>
+        <span class="footer-link">List your property</span>
+      </div>
+    </div>
+    <div class="footer-copy">© 2026 CozyHeven. All rights reserved.</div>
+  </footer>
+</div>
+
+<!-- SEARCH/EXPLORE PAGE -->
+<div class="page" id="page-search">
+  <div id="page-search" style="display:block">
+    <div style="background:var(--ink);padding:36px 24px 28px">
+      <div style="max-width:1140px;margin:0 auto">
+        <h1 style="font-family:'Playfair Display',serif;font-size:24px;color:var(--white);margin-bottom:20px">Explore Stays</h1>
+        <div class="search-bar-row">
+          <div><label class="lbl" style="color:rgba(255,255,255,.5)">Destination</label><input class="input" value="Mumbai, India" style="background:rgba(255,255,255,.1);border-color:rgba(181,134,42,.3);color:var(--white)"/></div>
+          <div><label class="lbl" style="color:rgba(255,255,255,.5)">Check-in</label><input class="input" type="text" value="Mar 25, 2026" style="background:rgba(255,255,255,.1);border-color:rgba(181,134,42,.3);color:var(--white)"/></div>
+          <div><label class="lbl" style="color:rgba(255,255,255,.5)">Check-out</label><input class="input" type="text" value="Mar 28, 2026" style="background:rgba(255,255,255,.1);border-color:rgba(181,134,42,.3);color:var(--white)"/></div>
+          <div><label class="lbl" style="color:rgba(255,255,255,.5)">Guests</label><input class="input" value="2 Adults · 1 Child" style="background:rgba(255,255,255,.1);border-color:rgba(181,134,42,.3);color:var(--white)"/></div>
+          <button style="padding:11px 24px;background:var(--gold);color:var(--white);border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Jost',sans-serif">Update</button>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1140px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:240px 1fr;gap:28px">
+      <!-- FILTERS -->
+      <div>
+        <div class="filter-card">
+          <div class="filter-h">Filters</div>
+          <div class="filter-group">
+            <div class="filter-label">Price per night</div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px"><span>₹2,000</span><span>₹18,000</span></div>
+            <div class="range-track"><div class="range-fill"></div><div class="range-thumb"></div></div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-label">Star rating</div>
+            <div><span class="chip-active">5★</span><span class="chip">4★</span><span class="chip">3★</span></div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-label">Amenities</div>
+            <div class="filter-row"><span>Pool</span><input type="checkbox" checked style="accent-color:var(--gold)"/></div>
+            <div class="filter-row"><span>Spa</span><input type="checkbox" style="accent-color:var(--gold)"/></div>
+            <div class="filter-row"><span>Gym</span><input type="checkbox" checked style="accent-color:var(--gold)"/></div>
+            <div class="filter-row"><span>Restaurant</span><input type="checkbox" checked style="accent-color:var(--gold)"/></div>
+            <div class="filter-row"><span>Free WiFi</span><input type="checkbox" checked style="accent-color:var(--gold)"/></div>
+            <div class="filter-row"><span>Parking</span><input type="checkbox" style="accent-color:var(--gold)"/></div>
+          </div>
+          <button class="btn-p" style="width:100%;padding:10px">Apply filters</button>
+        </div>
+      </div>
+      <!-- RESULTS -->
+      <div>
+        <div class="results-header">
+          <div class="results-count"><strong>24 properties</strong> in Mumbai, India · Mar 25–28</div>
+          <select class="sort-select"><option>Sort: Recommended</option><option>Price: Low to high</option><option>Price: High to low</option><option>Rating</option></select>
+        </div>
+        <div class="results-list">
+          <div class="result-card" onclick="goPage('detail')">
+            <div class="result-img"><div class="img-ph" style="height:100%"><span style="position:relative;z-index:1">Hotel Photo</span></div></div>
+            <div class="result-body">
+              <div class="result-name">The Grand Oberoi</div>
+              <div class="result-loc">📍 Nariman Point, Mumbai · Marine Drive</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="stars">★★★★★</span><strong style="font-size:13px">4.9</strong><span style="font-size:12px;color:var(--muted)">(312 reviews)</span><span class="badge badge-gold" style="margin-left:4px">5★ Luxury</span></div>
+              <div class="result-desc">Iconic luxury hotel on the Arabian Sea with world-class dining, rooftop pool and 287 elegantly appointed rooms.</div>
+              <div class="result-amenities"><span class="chip">🏊 Pool</span><span class="chip">🧖 Spa</span><span class="chip">🍽 Restaurant</span><span class="chip">❄ AC</span><span class="chip">📶 WiFi</span></div>
+            </div>
+            <div class="result-right">
+              <span class="badge badge-green">Free cancellation</span>
+              <div style="text-align:right">
+                <div style="font-size:11px;color:var(--muted)">Per night from</div>
+                <div class="price-big">₹8,400</div>
+                <div style="font-size:11px;color:var(--muted);margin-bottom:12px">+ ₹3,024 taxes</div>
+                <button class="btn-p" style="width:100%" onclick="event.stopPropagation();goPage('detail')">View deal</button>
+              </div>
+            </div>
+          </div>
+          <div class="result-card" onclick="goPage('detail')">
+            <div class="result-img"><div class="img-ph" style="height:100%"><span style="position:relative;z-index:1">Hotel Photo</span></div></div>
+            <div class="result-body">
+              <div class="result-name">Taj Lands End</div>
+              <div class="result-loc">📍 Bandra West, Mumbai · Seafront</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="stars">★★★★★</span><strong style="font-size:13px">4.8</strong><span style="font-size:12px;color:var(--muted)">(527 reviews)</span></div>
+              <div class="result-desc">Stunning beachfront property with panoramic Arabian Sea views, private beach access and award-winning restaurants.</div>
+              <div class="result-amenities"><span class="chip">🏊 Pool</span><span class="chip">🏖 Beach</span><span class="chip">🏋 Gym</span><span class="chip">📶 WiFi</span></div>
+            </div>
+            <div class="result-right">
+              <span class="badge badge-amber">Only 2 left!</span>
+              <div style="text-align:right">
+                <div style="font-size:11px;color:var(--muted)">Per night from</div>
+                <div class="price-big">₹11,200</div>
+                <div style="font-size:11px;color:var(--muted);margin-bottom:12px">+ ₹4,200 taxes</div>
+                <button class="btn-p" style="width:100%" onclick="event.stopPropagation();goPage('detail')">View deal</button>
+              </div>
+            </div>
+          </div>
+          <div class="result-card" onclick="goPage('detail')">
+            <div class="result-img"><div class="img-ph" style="height:100%"><span style="position:relative;z-index:1">Hotel Photo</span></div></div>
+            <div class="result-body">
+              <div class="result-name">ITC Maratha</div>
+              <div class="result-loc">📍 Andheri East, Mumbai · Airport</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="stars">★★★★</span><strong style="font-size:13px">4.6</strong><span style="font-size:12px;color:var(--muted)">(198 reviews)</span></div>
+              <div class="result-desc">Heritage luxury at the gateway to Mumbai. Perfect for business travellers with fast airport access and top-tier facilities.</div>
+              <div class="result-amenities"><span class="chip">🧖 Spa</span><span class="chip">✈ Airport</span><span class="chip">❄ AC</span><span class="chip">📶 WiFi</span></div>
+            </div>
+            <div class="result-right">
+              <span class="badge badge-green">Free cancellation</span>
+              <div style="text-align:right">
+                <div style="font-size:11px;color:var(--muted)">Per night from</div>
+                <div class="price-big">₹6,900</div>
+                <div style="font-size:11px;color:var(--muted);margin-bottom:12px">+ ₹2,400 taxes</div>
+                <button class="btn-p" style="width:100%" onclick="event.stopPropagation();goPage('detail')">View deal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOTEL DETAIL PAGE -->
+<div class="page" id="page-detail">
+  <div class="detail-hero">
+    <div class="img-ph" style="position:absolute;inset:0;opacity:.8"><span style="position:relative;z-index:1;font-size:14px">Hotel Photography</span></div>
+    <div class="detail-hero-overlay"></div>
+    <div style="position:absolute;top:24px;left:40px;right:40px;display:flex;justify-content:space-between;align-items:center;max-width:1140px;margin:0 auto">
+      <button class="back-btn" onclick="goPage('search')">← Back to results</button>
+      <div style="display:flex;gap:8px">
+        <button style="padding:8px 14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;color:var(--white);font-size:13px;cursor:pointer;font-family:'Jost',sans-serif;backdrop-filter:blur(8px)">♡ Save</button>
+        <button style="padding:8px 14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;color:var(--white);font-size:13px;cursor:pointer;font-family:'Jost',sans-serif;backdrop-filter:blur(8px)">⬆ Share</button>
+      </div>
+    </div>
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:0 40px 40px;max-width:1180px;margin:0 auto">
+      <div class="detail-hotel-name">The Grand Oberoi</div>
+      <div class="detail-meta">
+        <div style="display:flex;align-items:center;gap:6px"><span class="stars" style="font-size:16px">★★★★★</span><span style="font-size:15px;font-weight:600;color:var(--white)">4.9</span><span style="font-size:13px;color:rgba(255,255,255,.6)">(312 reviews)</span></div>
+        <span style="color:rgba(255,255,255,.5)">·</span>
+        <span style="font-size:13px;color:rgba(255,255,255,.75)">📍 Nariman Point, Mumbai</span>
+        <span class="badge badge-gold">5★ Luxury</span>
+        <span class="badge" style="background:rgba(30,107,64,.7);color:#9FE1CB">Free cancellation</span>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-main">
+      <div class="card" style="padding:28px;margin-bottom:24px">
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:14px">About this property</div>
+        <p style="font-size:14px;color:var(--slate);line-height:1.8;margin-bottom:16px">An iconic landmark offering unparalleled luxury on the Arabian Sea. The Grand Oberoi features world-class dining, a rooftop infinity pool, and 287 elegantly appointed rooms and suites, each with breathtaking views of Marine Drive and the Mumbai cityscape.</p>
+        <p style="font-size:14px;color:var(--slate);line-height:1.8">The hotel's multiple award-winning restaurants serve cuisine ranging from fine Indian to contemporary international. Our spa and wellness centre offers a sanctuary of calm in the heart of the city.</p>
+      </div>
+      <div class="card" style="padding:28px;margin-bottom:24px">
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:16px">Amenities</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>🏊</span>Rooftop pool</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>🧖</span>Full-service spa</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>🍽</span>5 restaurants</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>🏋</span>Fitness centre</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>📶</span>High-speed WiFi</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>🚗</span>Valet parking</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>🛎</span>24h concierge</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>❄</span>AC all rooms</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate)"><span>🌊</span>Sea views</div>
+        </div>
+      </div>
+      <div class="card" style="padding:28px;margin-bottom:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--ink)">Guest Reviews</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="stars" style="font-size:16px">★★★★★</span><span style="font-size:15px;font-weight:700;color:var(--ink)">4.9</span><span style="font-size:12px;color:var(--muted)">out of 5</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;gap:14px">
+            <div class="avatar">RS</div>
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:14px;font-weight:600">Riya Shah</span><span style="font-size:11px;color:var(--muted)">Mar 2026</span></div>
+              <div style="margin-bottom:6px"><span class="stars" style="font-size:13px">★★★★★</span></div>
+              <p style="font-size:13px;color:var(--slate);line-height:1.7">Exceptional service, stunning sea views, and the breakfast spread is absolutely unbeatable. The spa was a highlight — worth every rupee.</p>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex;gap:14px">
+            <div class="avatar" style="background:linear-gradient(135deg,#1A4E80,#378ADD)">AK</div>
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:14px;font-weight:600">Arjun Kapoor</span><span style="font-size:11px;color:var(--muted)">Feb 2026</span></div>
+              <div style="margin-bottom:6px"><span class="stars" style="font-size:13px">★★★★</span></div>
+              <p style="font-size:13px;color:var(--slate);line-height:1.7">Perfect for business stays. Fast WiFi, great meeting facilities, and the room was immaculate. The concierge team went above and beyond.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- SIDEBAR -->
+    <div class="detail-sidebar">
+      <div class="booking-widget">
+        <div class="bw-price">
+          <div style="font-size:11px;color:var(--muted);font-weight:500;margin-bottom:4px">From</div>
+          <div class="price-big" style="font-size:30px">₹8,400<span style="font-size:14px;font-weight:400;color:var(--muted)">/night</span></div>
+        </div>
+        <div class="bw-grid">
+          <div class="bw-field"><div class="bw-field-label">Check-in</div><div class="bw-field-val">Mar 25, 2026</div></div>
+          <div class="bw-field"><div class="bw-field-label">Check-out</div><div class="bw-field-val">Mar 28, 2026</div></div>
+        </div>
+        <div class="bw-field" style="margin-bottom:14px;border:1.5px solid var(--border);border-radius:9px;padding:10px 14px"><div class="bw-field-label">Guests</div><div class="bw-field-val">2 Adults · 1 Child</div></div>
+        <div class="divider"></div>
+        <div class="trow"><span class="tkey">3 nights × ₹8,400</span><span class="tval">₹25,200</span></div>
+        <div class="trow"><span class="tkey">Taxes & fees</span><span class="tval">₹3,024</span></div>
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <span style="font-size:14px;font-weight:600">Total</span>
+          <div class="price-big" style="font-size:22px">₹28,224</div>
+        </div>
+        <button class="btn-p" style="width:100%;padding:14px;font-size:15px" onclick="requireAuth('rooms')">Select Room →</button>
+        <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">Free cancellation · No hidden fees</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROOMS PAGE -->
+<div class="page" id="page-rooms">
+  <div class="page-header-bar">
+    <div class="page-header-inner">
+      <button class="back-btn" style="position:static;display:inline-flex;background:var(--warm);border:1px solid var(--border);color:var(--ink);margin-bottom:12px" onclick="goPage('detail')">← Back to hotel</button>
+      <div class="page-h">Select your Room</div>
+      <div class="page-sub">The Grand Oberoi · Mar 25–28, 2026 · 3 nights · 2 Adults · 1 Child</div>
+    </div>
+  </div>
+  <div class="rooms-body">
+    <div class="room-card selected" id="room-1">
+      <div class="room-img"><div class="img-ph" style="height:100%;width:100%"><span style="position:relative;z-index:1">Room Photo</span></div></div>
+      <div class="room-body">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <div class="room-name">Deluxe Sea View</div>
+          <span class="badge badge-gold">Selected</span>
+        </div>
+        <div class="room-specs">🛏 King Bed · 40 m² · Max 2 guests · Floor 12–18</div>
+        <div style="margin-bottom:10px"><span class="chip">❄ AC</span><span class="chip">Sea view</span><span class="chip">Minibar</span><span class="chip">Balcony</span><span class="chip">Bathrobe</span></div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.6">Breathtaking Arabian Sea views from every angle. Elegantly furnished with premium bedding, a marble bathroom, and a private balcony.</p>
+      </div>
+      <div class="room-right">
+        <span class="badge badge-green">Available</span>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--muted)">Per night</div>
+          <div class="price-big">₹8,400</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">₹25,200 for 3 nights</div>
+          <button class="btn-p" style="width:100%;padding:10px;font-size:13px" onclick="goPage('checkout')">Book this room</button>
+        </div>
+      </div>
+    </div>
+    <div class="room-card" id="room-2">
+      <div class="room-img"><div class="img-ph" style="height:100%;width:100%"><span style="position:relative;z-index:1">Room Photo</span></div></div>
+      <div class="room-body">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <div class="room-name">Junior Suite</div>
+          <span class="badge badge-blue">Popular</span>
+        </div>
+        <div class="room-specs">🛏 King Bed · 65 m² · Max 3 guests · Floor 20–24</div>
+        <div style="margin-bottom:10px"><span class="chip">❄ AC</span><span class="chip">Sea view</span><span class="chip">Lounge area</span><span class="chip">Bathtub</span></div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.6">A spacious suite with a separate living area and panoramic views. Features a king bed, walk-in wardrobe, and a deep-soak bathtub.</p>
+      </div>
+      <div class="room-right">
+        <span class="badge badge-green">Available</span>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--muted)">Per night</div>
+          <div class="price-big">₹14,500</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">₹43,500 for 3 nights</div>
+          <button class="btn-p" style="width:100%;padding:10px;font-size:13px" onclick="goPage('checkout')">Book this room</button>
+        </div>
+      </div>
+    </div>
+    <div class="room-card" style="opacity:.55">
+      <div class="room-img"><div class="img-ph" style="height:100%;width:100%"><span style="position:relative;z-index:1">Room Photo</span></div></div>
+      <div class="room-body">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <div class="room-name">Twin Room</div>
+          <span class="badge badge-red">Unavailable</span>
+        </div>
+        <div class="room-specs">🛏 Twin Beds · 32 m² · Max 2 guests</div>
+        <div><span class="chip">❄ AC</span><span class="chip">City view</span></div>
+      </div>
+      <div class="room-right">
+        <span class="badge badge-red">Sold out</span>
+        <div style="text-align:right"><div class="price-big" style="color:var(--muted)">₹5,200</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT PAGE -->
+<div class="page" id="page-checkout">
+  <div class="page-header-bar">
+    <div class="page-header-inner">
+      <button class="back-btn" style="position:static;display:inline-flex;background:var(--warm);border:1px solid var(--border);color:var(--ink);margin-bottom:12px" onclick="goPage('rooms')">← Back to rooms</button>
+      <div class="page-h">Checkout</div>
+      <div class="page-sub">Complete your booking — The Grand Oberoi</div>
+    </div>
+  </div>
+  <div class="checkout-body">
+    <div class="step-bar">
+      <div class="step-item done"><div class="step-num">✓</div>Search</div>
+      <div class="step-item done"><div class="step-num">✓</div>Hotel selected</div>
+      <div class="step-item done"><div class="step-num">✓</div>Room chosen</div>
+      <div class="step-item active"><div class="step-num">4</div>Checkout</div>
+      <div class="step-item"><div class="step-num">5</div>Confirmation</div>
+    </div>
+    <div>
+      <div class="form-section">
+        <div class="form-section-h">Primary guest details</div>
+        <div class="form-grid">
+          <div><label class="lbl">First name</label><input class="input" placeholder="Priya"/></div>
+          <div><label class="lbl">Last name</label><input class="input" placeholder="Sharma"/></div>
+        </div>
+        <div class="form-grid">
+          <div><label class="lbl">Email address</label><input class="input" type="email" placeholder="priya@email.com"/></div>
+          <div><label class="lbl">Phone number</label><input class="input" placeholder="+91 98765 43210"/></div>
+        </div>
+        <div class="form-grid">
+          <div><label class="lbl">Age</label><input class="input" placeholder="31"/></div>
+          <div><label class="lbl">Nationality</label><input class="input" placeholder="Indian"/></div>
+        </div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-h">Additional guests</div>
+        <div style="background:var(--warm);border:1px solid var(--border);border-radius:9px;padding:16px;margin-bottom:14px">
+          <div class="form-grid">
+            <div><label class="lbl">Guest name</label><input class="input" placeholder="Guest 2 name"/></div>
+            <div><label class="lbl">Age</label><input class="input" placeholder="Age"/></div>
+          </div>
+          <div><label class="lbl">Type</label>
+            <select class="input" style="cursor:pointer"><option>Adult</option><option>Child</option></select>
+          </div>
+        </div>
+        <button class="btn-s" style="font-size:13px;padding:10px 20px">+ Add another guest</button>
+      </div>
+      <div class="form-section">
+        <div class="form-section-h">Payment</div>
+        <div class="payment-methods">
+          <div class="pay-opt selected">💳 Credit / Debit Card</div>
+          <div class="pay-opt">🏦 UPI / Net Banking</div>
+        </div>
+        <div class="form-grid">
+          <div style="grid-column:1/-1"><label class="lbl">Card number</label><input class="input" placeholder="1234 5678 9012 3456"/></div>
+        </div>
+        <div class="form-grid">
+          <div><label class="lbl">Name on card</label><input class="input" placeholder="PRIYA SHARMA"/></div>
+          <div class="form-grid" style="gap:12px">
+            <div><label class="lbl">Expiry</label><input class="input" placeholder="MM / YY"/></div>
+            <div><label class="lbl">CVV</label><input class="input" placeholder="···"/></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div><label class="lbl">Offer / Promo code</label>
+          <div style="display:flex;gap:10px">
+            <input class="input" placeholder="Enter code" value="COZYHEVEN20"/>
+            <button class="btn-s" style="white-space:nowrap;padding:11px 20px">Apply</button>
+          </div>
+          <div class="offer-badge" style="margin-top:10px">
+            <div style="font-size:13px;font-weight:600;color:var(--green)">COZYHEVEN20 applied!</div>
+            <div style="font-size:13px;font-weight:700;color:var(--green)">− ₹5,040</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-p" style="width:100%;padding:16px;font-size:16px" onclick="goPage('confirm')">Pay ₹23,184 → Confirm Booking</button>
+    </div>
+    <div>
+      <div class="order-summary">
+        <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)">Order Summary</div>
+        <div style="display:flex;gap:12px;margin-bottom:16px">
+          <div class="img-ph" style="width:70px;height:56px;border-radius:8px;flex-shrink:0"><span></span></div>
+          <div><div style="font-size:14px;font-weight:600">The Grand Oberoi</div><div style="font-size:12px;color:var(--muted)">Deluxe Sea View · King Bed</div><div style="font-size:12px;color:var(--muted)">Mar 25–28, 2026</div></div>
+        </div>
+        <div class="trow"><span class="tkey">3 nights × ₹8,400</span><span class="tval">₹25,200</span></div>
+        <div class="trow"><span class="tkey">Taxes & fees</span><span class="tval">₹3,024</span></div>
+        <div class="trow"><span class="tkey">Promo COZYHEVEN20</span><span class="tval" style="color:var(--green)">− ₹5,040</span></div>
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:15px;font-weight:700">Total</span>
+          <div class="price-big" style="font-size:24px">₹23,184</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:20px">Inclusive of all taxes</div>
+        <div style="background:var(--green-bg);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--green);font-weight:500;display:flex;align-items:center;gap:8px">✓ Free cancellation until Mar 22, 2026</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRMATION PAGE -->
+<div class="page" id="page-confirm">
+  <div class="confirm-body">
+    <div class="confirm-icon">✓</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--ink);margin-bottom:8px">Booking Confirmed!</h1>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:8px">Your reservation is secured. Confirmation sent to priya@email.com</p>
+    <div class="booking-ref">CH-2026-04821</div>
+    <div class="card" style="padding:28px;text-align:left;margin-bottom:24px;border-color:rgba(30,107,64,.2)">
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin-bottom:18px;color:var(--ink)">Booking Details</div>
+      <div class="trow"><span class="tkey">Hotel</span><span class="tval">The Grand Oberoi, Mumbai</span></div>
+      <div class="trow"><span class="tkey">Room</span><span class="tval">Deluxe Sea View · King Bed</span></div>
+      <div class="trow"><span class="tkey">Check-in</span><span class="tval">Mar 25, 2026 · 3:00 PM</span></div>
+      <div class="trow"><span class="tkey">Check-out</span><span class="tval">Mar 28, 2026 · 11:00 AM</span></div>
+      <div class="trow"><span class="tkey">Guests</span><span class="tval">2 Adults · 1 Child</span></div>
+      <div class="trow"><span class="tkey">Total Paid</span><span class="tval" style="color:var(--green);font-size:15px;font-weight:700">₹23,184</span></div>
+      <div class="trow"><span class="tkey">Payment Status</span><span class="badge badge-green">● Success</span></div>
+      <div class="trow"><span class="tkey">Booking Status</span><span class="badge badge-blue">Confirmed</span></div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px">
+      <button class="btn-s" style="font-size:13px">📤 Share booking</button>
+      <button class="btn-s" style="font-size:13px">📥 Download receipt</button>
+      <button class="btn-s" style="font-size:13px">🗺 Get directions</button>
+    </div>
+    <button class="btn-p" style="padding:14px 36px;font-size:15px" onclick="requireAuth('bookings')">View My Bookings</button>
+  </div>
+</div>
+
+<!-- MY BOOKINGS PAGE -->
+<div class="page" id="page-bookings">
+  <div class="page-header-bar">
+    <div class="page-header-inner">
+      <div class="page-h">My Bookings</div>
+      <div class="page-sub">4 total reservations</div>
+    </div>
+  </div>
+  <div class="bookings-body">
+    <div style="display:flex;gap:8px;margin-bottom:24px">
+      <span class="chip-active">All (4)</span>
+      <span class="chip">Confirmed</span>
+      <span class="chip">Completed</span>
+      <span class="chip">Cancelled</span>
+      <span class="chip">Pending</span>
+    </div>
+    <div class="booking-list-card" style="border-left:4px solid var(--blue)">
+      <div class="img-ph" style="width:100px;height:72px;border-radius:10px;flex-shrink:0"><span></span></div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;margin-bottom:3px">The Grand Oberoi</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Deluxe Sea View · Mar 25–28, 2026 · 3 nights</div>
+        <div style="font-size:12px;color:var(--muted)">Booking #CH-2026-04821</div>
+      </div>
+      <div style="text-align:center"><span class="badge badge-blue">Confirmed</span></div>
+      <div style="text-align:right">
+        <div class="price-med">₹23,184</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn-s" style="font-size:11px;padding:7px 12px">View details</button>
+          <button class="btn-s" style="font-size:11px;padding:7px 12px;color:var(--red);border-color:rgba(176,48,32,.2)">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div class="booking-list-card" style="border-left:4px solid var(--green)">
+      <div class="img-ph" style="width:100px;height:72px;border-radius:10px;flex-shrink:0"><span></span></div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;margin-bottom:3px">Taj Lands End</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Junior Suite · Jan 10–13, 2026 · 3 nights</div>
+        <div style="font-size:12px;color:var(--muted)">Booking #CH-2026-02341</div>
+      </div>
+      <div style="text-align:center"><span class="badge badge-green">Completed</span></div>
+      <div style="text-align:right">
+        <div class="price-med">₹43,500</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn-s" style="font-size:11px;padding:7px 12px">View details</button>
+          <button class="btn-p" style="font-size:11px;padding:7px 12px" onclick="goPage('home')">Write Review</button>
+        </div>
+      </div>
+    </div>
+    <div class="booking-list-card" style="border-left:4px solid var(--red);opacity:.65">
+      <div class="img-ph" style="width:100px;height:72px;border-radius:10px;flex-shrink:0"><span></span></div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;margin-bottom:3px">ITC Maratha</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Standard Room · Dec 20–22, 2025</div>
+        <div style="font-size:12px;color:var(--muted)">Booking #CH-2025-09812</div>
+      </div>
+      <div style="text-align:center"><span class="badge badge-red">Cancelled</span></div>
+      <div style="text-align:right"><div class="price-med" style="color:var(--muted)">₹14,000</div></div>
+    </div>
+    <div class="booking-list-card" style="border-left:4px solid var(--amber)">
+      <div class="img-ph" style="width:100px;height:72px;border-radius:10px;flex-shrink:0"><span></span></div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;margin-bottom:3px">JW Marriott Pune</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Deluxe Room · Apr 5–7, 2026 · 2 nights</div>
+        <div style="font-size:12px;color:var(--muted)">Booking #CH-2026-05122</div>
+      </div>
+      <div style="text-align:center"><span class="badge badge-amber">Pending</span></div>
+      <div style="text-align:right">
+        <div class="price-med">₹18,600</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn-s" style="font-size:11px;padding:7px 12px">View details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE -->
+<div class="page" id="page-profile">
+  <div class="page-header-bar">
+    <div class="page-header-inner">
+      <div class="page-h">My Profile</div>
+      <div class="page-sub">Manage your account and preferences</div>
+    </div>
+  </div>
+  <div class="profile-body">
+    <div>
+      <div class="profile-sidebar-card" style="margin-bottom:16px">
+        <div class="profile-av-big" id="profile-av-big">PS</div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:4px" id="profile-fullname">Priya Sharma</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:14px" id="profile-email-display">priya@email.com</div>
+        <span class="badge badge-gold" style="margin-bottom:20px">★ Gold Member</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div style="text-align:center"><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold)">4</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Bookings</div></div>
+          <div style="text-align:center"><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold)">2</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Reviews</div></div>
+          <div style="text-align:center"><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold)">9</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Nights</div></div>
+        </div>
+      </div>
+      <div class="card" style="padding:20px">
+        <button onclick="goPage('bookings')" style="display:block;width:100%;padding:11px 16px;text-align:left;font-size:14px;font-weight:500;color:var(--ink);background:none;border:none;border-radius:8px;cursor:pointer;font-family:'Jost',sans-serif;transition:background .15s" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='none'">📋 My Bookings</button>
+        <button style="display:block;width:100%;padding:11px 16px;text-align:left;font-size:14px;font-weight:500;color:var(--ink);background:none;border:none;border-radius:8px;cursor:pointer;font-family:'Jost',sans-serif;transition:background .15s" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='none'">♡ Saved properties</button>
+        <button style="display:block;width:100%;padding:11px 16px;text-align:left;font-size:14px;font-weight:500;color:var(--ink);background:none;border:none;border-radius:8px;cursor:pointer;font-family:'Jost',sans-serif;transition:background .15s" onmouseover="this.style.background='var(--warm)'" onmouseout="this.style.background='none'">🔔 Notifications</button>
+        <div style="height:1px;background:var(--border);margin:8px 0"></div>
+        <button onclick="logout()" style="display:block;width:100%;padding:11px 16px;text-align:left;font-size:14px;font-weight:500;color:var(--red);background:none;border:none;border-radius:8px;cursor:pointer;font-family:'Jost',sans-serif;transition:background .15s" onmouseover="this.style.background='var(--red-bg)'" onmouseout="this.style.background='none'">⬤ Sign out</button>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="padding:28px;margin-bottom:20px">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)">Personal Information</div>
+        <div class="form-grid"><div><label class="lbl">First name</label><input class="input" value="Priya"/></div><div><label class="lbl">Last name</label><input class="input" value="Sharma"/></div></div>
+        <div class="form-grid"><div><label class="lbl">Email address</label><input class="input" type="email" value="priya@email.com"/></div><div><label class="lbl">Phone number</label><input class="input" value="+91 98765 43210"/></div></div>
+        <div style="margin-bottom:20px"><label class="lbl">Address</label><input class="input" value="Bandra West, Mumbai 400050"/></div>
+        <button class="btn-p" style="padding:12px 28px">Save changes</button>
+      </div>
+      <div class="card" style="padding:28px">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)">Change Password</div>
+        <div style="margin-bottom:14px"><label class="lbl">Current password</label><input class="input" type="password" placeholder="Enter current password"/></div>
+        <div class="form-grid">
+          <div><label class="lbl">New password</label><input class="input" type="password" placeholder="New password"/></div>
+          <div><label class="lbl">Confirm password</label><input class="input" type="password" placeholder="Confirm new password"/></div>
+        </div>
+        <button class="btn-s" style="padding:12px 24px;margin-top:6px">Update password</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal" onclick="closeAuthOnBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div style="text-align:center;margin-bottom:6px">
+      <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink)">Cozy<span style="color:var(--gold)">Heven</span></div>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-login" onclick="switchAuth('login')">Sign In</div>
+      <div class="auth-tab" id="tab-register" onclick="switchAuth('register')">Create Account</div>
+    </div>
+    <!-- LOGIN -->
+    <div id="form-login">
+      <div style="margin-bottom:16px"><label class="lbl">Email address</label><input class="input" id="login-email" type="email" placeholder="you@email.com"/></div>
+      <div style="margin-bottom:20px"><label class="lbl">Password</label><input class="input" id="login-pass" type="password" placeholder="Your password"/>
+        <div style="text-align:right;margin-top:6px"><a style="font-size:12px;color:var(--gold);cursor:pointer;font-weight:500">Forgot password?</a></div>
+      </div>
+      <button class="btn-p" style="width:100%;padding:14px;font-size:15px;margin-bottom:16px" onclick="doLogin()">Sign In →</button>
+      <div style="text-align:center;font-size:13px;color:var(--muted)">Don't have an account? <a style="color:var(--gold);cursor:pointer;font-weight:600" onclick="switchAuth('register')">Register free</a></div>
+      <div style="margin:20px 0;display:flex;align-items:center;gap:12px"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:12px;color:var(--muted)">or continue with</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <button class="btn-s" style="font-size:13px;padding:11px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="doSocialLogin()">G Google</button>
+        <button class="btn-s" style="font-size:13px;padding:11px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="doSocialLogin()">f Facebook</button>
+      </div>
+    </div>
+    <!-- REGISTER -->
+    <div id="form-register" style="display:none">
+      <div class="form-grid" style="margin-bottom:14px">
+        <div><label class="lbl">First name</label><input class="input" id="reg-fname" placeholder="Priya"/></div>
+        <div><label class="lbl">Last name</label><input class="input" id="reg-lname" placeholder="Sharma"/></div>
+      </div>
+      <div style="margin-bottom:14px"><label class="lbl">Email address</label><input class="input" id="reg-email" type="email" placeholder="you@email.com"/></div>
+      <div style="margin-bottom:14px"><label class="lbl">Phone number</label><input class="input" id="reg-phone" placeholder="+91 98765 43210"/></div>
+      <div class="form-grid" style="margin-bottom:20px">
+        <div><label class="lbl">Password</label><input class="input" id="reg-pass" type="password" placeholder="Create password"/></div>
+        <div><label class="lbl">Confirm</label><input class="input" type="password" placeholder="Repeat password"/></div>
+      </div>
+      <button class="btn-p" style="width:100%;padding:14px;font-size:15px;margin-bottom:16px" onclick="doRegister()">Create Account →</button>
+      <div style="text-align:center;font-size:12px;color:var(--muted)">By registering you agree to our <a style="color:var(--gold);cursor:pointer">Terms</a> and <a style="color:var(--gold);cursor:pointer">Privacy Policy</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+var currentUser = null;
+var pendingPage = null;
+
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  var pg = document.getElementById('page-' + id);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  var nm = document.querySelector('.nav-link[onclick*="' + id + '"]');
+  if (nm) nm.classList.add('active');
+}
+
+function requireAuth(id) {
+  if (currentUser) { goPage(id); }
+  else { pendingPage = id; openAuth('login'); }
+}
+
+function openAuth(tab) {
+  document.getElementById('auth-modal').classList.add('open');
+  switchAuth(tab || 'login');
+}
+function closeAuth() { document.getElementById('auth-modal').classList.remove('open'); }
+function closeAuthOnBg(e) { if (e.target === document.getElementById('auth-modal')) closeAuth(); }
+function switchAuth(tab) {
+  document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+}
+
+function doLogin() {
+  var email = document.getElementById('login-email').value.trim();
+  var pass = document.getElementById('login-pass').value;
+  if (!email) { showToast('Please enter your email'); return; }
+  if (!pass) { showToast('Please enter your password'); return; }
+  var name = email.split('@')[0];
+  var initials = name.length >= 2 ? (name[0] + name[1]).toUpperCase() : name[0].toUpperCase();
+  var displayName = name.charAt(0).toUpperCase() + name.slice(1);
+  loginUser({ email: email, name: displayName + ' S.', fullname: displayName + ' Sharma', initials: initials });
+}
+
+function doRegister() {
+  var fn = document.getElementById('reg-fname').value.trim();
+  var ln = document.getElementById('reg-lname').value.trim();
+  var email = document.getElementById('reg-email').value.trim();
+  var pass = document.getElementById('reg-pass').value;
+  if (!fn || !ln) { showToast('Please enter your full name'); return; }
+  if (!email) { showToast('Please enter your email'); return; }
+  if (!pass || pass.length < 6) { showToast('Password must be at least 6 characters'); return; }
+  var initials = (fn[0] + ln[0]).toUpperCase();
+  loginUser({ email: email, name: fn + ' ' + ln[0] + '.', fullname: fn + ' ' + ln, initials: initials });
+}
+
+function doSocialLogin() {
+  loginUser({ email: 'guest@cozyheven.com', name: 'Guest User', fullname: 'Guest User', initials: 'GU' });
+}
+
+function loginUser(user) {
+  currentUser = user;
+  document.getElementById('nav-actions').style.display = 'none';
+  document.getElementById('nav-user').style.display = 'block';
+  document.getElementById('nav-bookings-btn').style.display = 'inline-block';
+  document.getElementById('nav-profile-btn').style.display = 'inline-block';
+  document.getElementById('nav-av').textContent = user.initials;
+  document.getElementById('nav-username').textContent = user.name;
+  document.getElementById('menu-fullname').textContent = user.fullname;
+  document.getElementById('menu-email').textContent = user.email;
+  document.getElementById('profile-av-big').textContent = user.initials;
+  document.getElementById('profile-fullname').textContent = user.fullname;
+  document.getElementById('profile-email-display').textContent = user.email;
+  closeAuth();
+  showToast('Welcome back, ' + user.name.split(' ')[0] + '!');
+  if (pendingPage) { setTimeout(function() { goPage(pendingPage); pendingPage = null; }, 400); }
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('nav-actions').style.display = 'flex';
+  document.getElementById('nav-user').style.display = 'none';
+  document.getElementById('nav-bookings-btn').style.display = 'none';
+  document.getElementById('nav-profile-btn').style.display = 'none';
+  closeMenu();
+  goPage('home');
+  showToast('You have been signed out.');
+}
+
+function toggleUserMenu() {
+  var m = document.getElementById('user-menu');
+  m.style.display = m.style.display === 'none' ? 'block' : 'none';
+}
+function closeMenu() { document.getElementById('user-menu').style.display = 'none'; }
+document.addEventListener('click', function(e) {
+  var pill = document.querySelector('.user-pill');
+  var menu = document.getElementById('user-menu');
+  if (pill && menu && !pill.contains(e.target) && !menu.contains(e.target)) menu.style.display = 'none';
+});
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+var today = new Date();
+var ci = new Date(today); ci.setDate(ci.getDate() + 7);
+var co = new Date(today); co.setDate(co.getDate() + 10);
+function fmt(d) { return d.toISOString().split('T')[0]; }
+var hin = document.getElementById('home-checkin');
+var hout = document.getElementById('home-checkout');
+if (hin) hin.value = fmt(ci);
+if (hout) hout.value = fmt(co);
+</script>
+</body>
+</html>
