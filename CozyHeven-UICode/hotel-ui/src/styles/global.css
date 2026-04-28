@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #B5862A;
+  --gold-l: #D4A93C;
+  --gold-ll: #F0CC70;
+  --gold-bg: #FBF6EA;
+  --ink: #1C1409;
+  --ink2: #2E200F;
+  --slate: #6B5030;
+  --muted: #9A8060;
+  --cream: #FAF7F0;
+  --warm: #F2EAD8;
+  --white: #FFFFFF;
+  --green: #1E6B40;
+  --green-bg: #EAF5EF;
+  --red: #B03020;
+  --red-bg: #FAEAE8;
+  --blue: #1A4E80;
+  --blue-bg: #E8EFF8;
+  --amber: #A85510;
+  --amber-bg: #FEF0E0;
+  --border: rgba(181,134,42,.16);
+  --border2: rgba(181,134,42,.28);
+  --shadow: 0 4px 32px rgba(28,20,9,.12);
+  --shadow-sm: 0 2px 12px rgba(28,20,9,.08);
+  --r: 14px;
+  --r-sm: 10px;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
+button { font-family: 'Jost', sans-serif; cursor: pointer; border: none; background: none; }
+input, select, textarea { font-family: 'Jost', sans-serif; }
+a { text-decoration: none; }
+
+.page-fade { animation: fadeUp .35s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+
+/* Bootstrap conflict fixes */
+.btn-nav-login,
+.btn-nav-register {
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.modal-overlay {
+  z-index: 9999 !important;
+}
+
+.modal {
+  z-index: 10000 !important;
+}

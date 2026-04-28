@@ -1,0 +1,31 @@
+/* ── NAVBAR ── */
+.navbar { position: sticky; top: 0; z-index: 200; background: rgba(250,247,240,.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1140px; margin: 0 auto; padding: 0 24px; height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -.02em; }
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-link { padding: 8px 14px; font-size: 13px; font-weight: 500; color: var(--slate); border-radius: 8px; transition: all .15s; cursor: pointer; }
+.nav-link:hover { color: var(--ink); background: var(--warm); }
+.nav-link.active { color: var(--gold); font-weight: 600; }
+.nav-actions { display: flex; align-items: center; gap: 8px; }
+.btn-nav-login { padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--gold); border: 1.5px solid var(--border2); border-radius: 8px; transition: all .15s; }
+.btn-nav-login:hover { background: var(--gold-bg); border-color: var(--gold); }
+.btn-nav-register { padding: 9px 20px; font-size: 13px; font-weight: 600; color: var(--white); background: var(--gold); border-radius: 8px; transition: all .15s; }
+.btn-nav-register:hover { background: var(--gold-l); }
+
+/* User pill */
+.user-pill { display: flex; align-items: center; gap: 8px; padding: 5px 14px 5px 6px; border: 1px solid var(--border2); border-radius: 30px; background: var(--warm); position: relative; cursor: pointer; transition: border-color .15s; }
+.user-pill:hover { border-color: var(--gold); }
+.user-av { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-l)); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--white); }
+.user-pill-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.user-pill-caret { font-size: 9px; color: var(--muted); }
+
+/* Dropdown */
+.user-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow); min-width: 220px; overflow: hidden; z-index: 300; animation: fadeUp .2s ease; }
+.user-dropdown-head { padding: 16px 18px; background: var(--gold-bg); border-bottom: 1px solid var(--border); }
+.user-dropdown-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--ink); }
+.user-dropdown-email { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.user-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 11px 18px; font-size: 13px; font-weight: 500; color: var(--slate); width: 100%; text-align: left; transition: all .12s; cursor: pointer; }
+.user-dropdown-item:hover { background: var(--warm); color: var(--ink); }
+.user-dropdown-item.danger { color: var(--red); border-top: 1px solid var(--border); }
+.user-dropdown-item.danger:hover { background: var(--red-bg); }
